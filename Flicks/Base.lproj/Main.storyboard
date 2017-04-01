@@ -142,7 +142,7 @@
         <!--Navigation Controller-->
         <scene sceneID="8Eo-Rf-ujv">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SO8-rU-yUW" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="FlicksNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="SO8-rU-yUW" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="oNg-Fa-hR0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
