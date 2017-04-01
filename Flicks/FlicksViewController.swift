@@ -14,6 +14,9 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
 
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var networkErrorView: UIView!
+    
+    @IBOutlet weak var networkErrorLabel: UILabel!
     var flicks: [NSDictionary]?
     
     var endpoint: String?
@@ -21,7 +24,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        networkErrorView.isHidden = true
         // Initialize a UIRefreshControl
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(FlicksViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
@@ -49,13 +52,24 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
             MBProgressHUD.hide(for: self.view, animated: true)
             
             if error != nil {
-                print(error ?? "Network error")
+                self.networkErrorLabel.text = "Network Error"
+                let attachment: NSTextAttachment = NSTextAttachment()
+                attachment.image = UIImage(named: "network_error")
+                let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
+                let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
+                let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
+                mutableAttachmentString.append(strLabelText)
+                
+                self.networkErrorLabel.attributedText = mutableAttachmentString
+                
+                self.networkErrorView.isHidden = false
+
             } else if let data = data,
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
-                print(dataDictionary)
+                self.networkErrorView.isHidden = true
                 self.flicks = dataDictionary["results"] as? [NSDictionary]
                 self.tableView.reloadData()
-               print(dataDictionary)
+               //print(dataDictionary)
             }
         }
         task.resume()
@@ -82,21 +96,25 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
         
         
-        // Display HUD right before the request is made
-        MBProgressHUD.showAdded(to: self.view, animated: true)
-        
         let task: URLSessionDataTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-            // Hide HUD once the network request comes back (must be done on main UI thread)
-            MBProgressHUD.hide(for: self.view, animated: true)
             
             if error != nil {
-                print(error ?? "Network error")
+                self.networkErrorLabel.text = "Network Error"
+                let attachment: NSTextAttachment = NSTextAttachment()
+                attachment.image = UIImage(named: "network_error")
+                let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
+                let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
+                let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
+                mutableAttachmentString.append(strLabelText)
+                
+                self.networkErrorLabel.attributedText = mutableAttachmentString
+                self.networkErrorView.isHidden = false
             } else if let data = data,
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
-                print(dataDictionary)
+                //print(dataDictionary)
+                self.networkErrorView.isHidden = true
                 self.flicks = dataDictionary["results"] as? [NSDictionary]
                 self.tableView.reloadData()
-                print(dataDictionary)
             }
             // ... Use the new data to update the data source ...
             
