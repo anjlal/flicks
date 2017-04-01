@@ -16,15 +16,22 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var overviewLabel: UILabel!
     
+    @IBOutlet weak var scrollView: UIScrollView!
+    
+    @IBOutlet weak var infoView: UIView!
     var flick: NSDictionary!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height)
         let title = flick["title"] as? String
         titleLabel.text = title
         
         let overview = flick["overview"] as? String
         overviewLabel.text = overview
+        
+        overviewLabel.sizeToFit()
         
         if let posterPath = flick["poster_path"] as? String {
             let baseURL = "https://image.tmdb.org/t/p/w342"
