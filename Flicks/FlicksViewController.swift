@@ -71,30 +71,35 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "FlickCell", for: indexPath) as! FlickCell
         
         let flick = flicks![indexPath.row]
-        
         let title = flick["title"] as! String
         let overview = flick["overview"] as! String
-        let posterPath = flick["poster_path"] as! String
-        
-        let baseURL = "https://image.tmdb.org/t/p/w342"
-        
-        let imageURL = NSURL(string:baseURL + posterPath)
-        
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
-        cell.posterView.setImageWith(imageURL as! URL)
+        
+        if let posterPath = flick["poster_path"] as? String {
+            let baseURL = "https://image.tmdb.org/t/p/w342"
+            let imageURL = NSURL(string:baseURL + posterPath)
+            cell.posterView.setImageWith(imageURL as! URL)
+        }
         
         return cell
     }
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPath(for: cell)
+        let flick = flicks?[(indexPath?.row)!]
+        
+        let detailViewController = segue.destination as! DetailViewController
+        detailViewController.flick = flick
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    */
+ 
 
 }

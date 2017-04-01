@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B330E36B1E8F547900129A55 /* ApiKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = B330E36A1E8F547900129A55 /* ApiKeys.plist */; };
+		B330E36D1E8F62CE00129A55 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B330E36C1E8F62CE00129A55 /* DetailViewController.swift */; };
 		B3FAD4D51E8E120D004F61C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FAD4D41E8E120D004F61C9 /* AppDelegate.swift */; };
 		B3FAD4DA1E8E120D004F61C9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3FAD4D81E8E120D004F61C9 /* Main.storyboard */; };
 		B3FAD4DC1E8E120D004F61C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3FAD4DB1E8E120D004F61C9 /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 		057C1BF73084D4EEBB7A0EB9 /* Pods-Flicks.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Flicks.release.xcconfig"; path = "Pods/Target Support Files/Pods-Flicks/Pods-Flicks.release.xcconfig"; sourceTree = "<group>"; };
 		20E3F69DE70537DA97FA0EC3 /* Pods-Flicks.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Flicks.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Flicks/Pods-Flicks.debug.xcconfig"; sourceTree = "<group>"; };
 		B330E36A1E8F547900129A55 /* ApiKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ApiKeys.plist; sourceTree = "<group>"; };
+		B330E36C1E8F62CE00129A55 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		B3FAD4D11E8E120D004F61C9 /* Flicks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flicks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3FAD4D41E8E120D004F61C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3FAD4D91E8E120D004F61C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				B3FAD4E61E8E1274004F61C9 /* FlicksViewController.swift */,
+				B330E36C1E8F62CE00129A55 /* DetailViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 				B3FAD4E71E8E1274004F61C9 /* FlicksViewController.swift in Sources */,
 				B3FAD4EF1E8E29CB004F61C9 /* FlickCell.swift in Sources */,
 				B3FAD4D51E8E120D004F61C9 /* AppDelegate.swift in Sources */,
+				B330E36D1E8F62CE00129A55 /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
