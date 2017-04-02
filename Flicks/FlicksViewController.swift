@@ -10,18 +10,25 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class FlicksViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FlicksViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkErrorView: UIView!
     @IBOutlet weak var networkErrorLabel: UILabel!
     
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     var flicks: [NSDictionary]?
     
     var endpoint: String?
+    var titles: [String]?
+    var filteredData: [String]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.backgroundColor = UIColor.lightGray
+        searchBar.delegate = self
+        
         if let navigationBar = navigationController?.navigationBar {
             navigationBar.tintColor = UIColor.white
             self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
@@ -73,8 +80,13 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
                 self.networkErrorView.isHidden = true
                 self.flicks = dataDictionary["results"] as? [NSDictionary]
                 self.tableView.reloadData()
-               //print(dataDictionary)
-            }
+                for flick in self.flicks! {
+                    if let title = flick["title"] as? String {
+                        if (self.titles?.append(title)) == nil {
+                            self.titles = [title]
+                        }                    }
+                }
+                self.filteredData = self.titles            }
         }
         task.resume()
         
@@ -115,7 +127,6 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
                 self.networkErrorView.isHidden = false
             } else if let data = data,
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
-                //print(dataDictionary)
                 self.networkErrorView.isHidden = true
                 self.flicks = dataDictionary["results"] as? [NSDictionary]
                 self.tableView.reloadData()
@@ -142,11 +153,12 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if let flicks = flicks {
-            return flicks.count
-        } else {
-            return 0
-        }
+//        if let flicks = flicks {
+//            return flicks.count
+//        } else {
+//            return 0
+//        }
+      return (filteredData?.count)!
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -155,7 +167,9 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         let flick = flicks![indexPath.row]
         let title = flick["title"] as! String
         let overview = flick["overview"] as! String
-        cell.titleLabel.text = title
+        //cell.titleLabel.text = title
+        cell.titleLabel.text = filteredData?[indexPath.row]
+        titles?.append(title)
         cell.overviewLabel.text = overview
         
         if let posterPath = flick["poster_path"] as? String {
@@ -190,20 +204,28 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell: FlickCell = tableView.cellForRow(at: indexPath) as! FlickCell
-//        if(cell.isSelected){
-//            cell.selectionStyle = .none
-//            
-//            // Use a red color when the user selects the cell
-//            let backgroundView = UIView()
-//            backgroundView.backgroundColor = UIColor.red
-//            cell.selectedBackgroundView = backgroundView
-//
-//        }else{
-//            cell.backgroundColor = UIColor.clear
-//        }
+    // This method updates filteredData based on the text in the Search Box
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // When there is no text, filteredData is the same as the original data
+        // When user has entered text into the search box
+        // Use the filter method to iterate over all items in the data array
+        // For each item, return true if the item should be included and false if the
+        // item should NOT be included
+        filteredData = searchText.isEmpty ? titles : titles?.filter { (item: String) -> Bool in
+            // If dataItem matches the searchText, return true to include it
+            return item.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        }
+        tableView.reloadData()
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = UIColor.clear
+    }
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let cell: FlickCell = tableView.cellForRow(at: indexPath) as! FlickCell
+//        
+//    }
 
     
     // MARK: - Navigation
