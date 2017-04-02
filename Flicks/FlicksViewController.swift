@@ -9,12 +9,15 @@
 import UIKit
 import AFNetworking
 import MBProgressHUD
+import AVFoundation
 
 class FlicksViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkErrorView: UIView!
     @IBOutlet weak var networkErrorLabel: UILabel!
+    
+    @IBOutlet weak var networkErrorImage: UIImageView!
     
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -26,7 +29,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.backgroundColor = UIColor.lightGray
+        self.tableView.backgroundColor = UIColor.white
         searchBar.delegate = self
         
         if let navigationBar = navigationController?.navigationBar {
@@ -63,15 +66,20 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
             
             if error != nil {
                 self.networkErrorLabel.text = "Network Error"
-                let attachment: NSTextAttachment = NSTextAttachment()
-                attachment.image = UIImage(named: "network_error")
+                let image = UIImage(named: "network_error")
+                self.networkErrorImage.frame.size = CGSize(width: 12, height: 12)
+                self.networkErrorImage.image = image;
+                //self.view.addSubview(imageView);
+                //self.networkErrorImage.image = self.resizeImage(image: self.networkErrorImage.image!, newWidth: 12)
+                //let attachment: NSTextAttachment = NSTextAttachment()
+                //attachment.image = UIImage(named: "network_error")
 
-                let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
-                let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
-                let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
-                mutableAttachmentString.append(strLabelText)
+                //let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
+                //let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
+                //let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
+                //mutableAttachmentString.append(strLabelText)
                 
-                self.networkErrorLabel.attributedText = mutableAttachmentString
+                //self.networkErrorLabel.attributedText = mutableAttachmentString
                 
                 self.networkErrorView.isHidden = false
 
@@ -110,14 +118,15 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
             
             if error != nil {
                 self.networkErrorLabel.text = "Network Error"
-                let attachment: NSTextAttachment = NSTextAttachment()
-                attachment.image = UIImage(named: "network_error")
-                let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
-                let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
-                let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
-                mutableAttachmentString.append(strLabelText)
-                
-                self.networkErrorLabel.attributedText = mutableAttachmentString
+                self.networkErrorImage.image = UIImage(named: "network_error")
+//                let attachment: NSTextAttachment = NSTextAttachment()
+//                attachment.image = UIImage(named: "network_error")
+//                let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
+//                let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
+//                let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
+//                mutableAttachmentString.append(strLabelText)
+//                
+//                self.networkErrorLabel.attributedText = mutableAttachmentString
                 self.networkErrorView.isHidden = false
             } else if let data = data,
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
@@ -221,8 +230,22 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.reloadData()
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.searchBar.showsCancelButton = true
+        searchActive = true
+
+    }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.backgroundColor = UIColor.clear
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false
+        searchBar.showsCancelButton = false
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        tableView.reloadData()
     }
     
 //    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -245,6 +268,4 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         detailViewController.flick = flick
 
     }
- 
-
 }

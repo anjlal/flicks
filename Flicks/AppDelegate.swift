@@ -26,12 +26,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         nowPlayingViewController.endpoint = "now_playing"
         nowPlayingNavController.tabBarItem.title = "Now Playing"
         nowPlayingNavController.tabBarItem.image = UIImage(named: "now_playing")
+        UITabBar.appearance().tintColor = UIColor.white
+        UITabBar.appearance().barTintColor = UIColor.darkGray
 
         let topRatedNavController = storyboard.instantiateViewController(withIdentifier: "FlicksNavigationController") as! UINavigationController
         let topRatedViewController = topRatedNavController.topViewController as! FlicksViewController
         topRatedViewController.endpoint = "top_rated"
         topRatedNavController.tabBarItem.title = "Top Rated"
         topRatedNavController.tabBarItem.image = UIImage(named: "top_rated")
+        
 
 
         let tabBarController = UITabBarController()
@@ -40,6 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = tabBarController
         
         window?.makeKeyAndVisible()
+        
+        UISearchBar.appearance().tintColor = UIColor.white
 
         return true
     }

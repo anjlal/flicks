@@ -118,17 +118,21 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <view alpha="0.69999999999999996" contentMode="scaleToFill" misplaced="YES" id="PCH-pp-FJG">
-                                <rect key="frame" x="0.0" y="63" width="375" height="32"/>
+                            <view alpha="0.90000000000000002" contentMode="scaleToFill" misplaced="YES" id="PCH-pp-FJG">
+                                <rect key="frame" x="0.0" y="63" width="375" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="sEY-MO-W0a">
-                                        <rect key="frame" x="121" y="5" width="134" height="23"/>
+                                        <rect key="frame" x="121" y="4" width="134" height="39"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Upx-mH-oFA">
+                                        <rect key="frame" x="67" y="-48" width="240" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -136,6 +140,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Flicks" id="z67-uA-d0I"/>
                     <connections>
+                        <outlet property="networkErrorImage" destination="Upx-mH-oFA" id="w97-4L-sue"/>
                         <outlet property="networkErrorLabel" destination="sEY-MO-W0a" id="PU3-Tt-E4N"/>
                         <outlet property="networkErrorView" destination="PCH-pp-FJG" id="vyb-S9-CAr"/>
                         <outlet property="searchBar" destination="Wy7-2Q-mx1" id="Vot-zq-ZQ7"/>
