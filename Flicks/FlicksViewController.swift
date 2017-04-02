@@ -13,10 +13,9 @@ import MBProgressHUD
 class FlicksViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var networkErrorView: UIView!
-    
     @IBOutlet weak var networkErrorLabel: UILabel!
+    
     var flicks: [NSDictionary]?
     
     var endpoint: String?
@@ -148,7 +147,6 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FlickCell", for: indexPath) as! FlickCell
-        
         let flick = flicks![indexPath.row]
         let title = flick["title"] as! String
         let overview = flick["overview"] as! String
@@ -157,11 +155,49 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         
         if let posterPath = flick["poster_path"] as? String {
             let baseURL = "https://image.tmdb.org/t/p/w342"
-            let imageURL = NSURL(string:baseURL + posterPath)
-            cell.posterView.setImageWith(imageURL as! URL)
+            //let imageURL = NSURL(string:baseURL + posterPath)
+            let imageURL = NSURLRequest(url: NSURL(string: baseURL + posterPath) as! URL)
+            //cell.posterView.setImageWith(imageURL as! URL)
+          
+            cell.posterView.setImageWith(
+                imageURL as URLRequest,
+                placeholderImage: nil,
+                success: { (imageRequest, imageResponse, image) -> Void in
+                    
+                    // imageResponse will be nil if the image is cached
+                    if imageResponse != nil {
+                        print("Image was NOT cached, fade in image")
+                        cell.posterView.alpha = 0.0
+                        cell.posterView.image = image
+                        UIView.animate(withDuration: 0.3, animations: { () -> Void in
+                            cell.posterView.alpha = 1.0
+                        })
+                    } else {
+                        print("Image was cached so just update the image")
+                        cell.posterView.image = image
+                    }
+            },
+                failure: { (imageRequest, imageResponse, error) -> Void in
+                    // do something for the failure condition
+            })
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let cell: FlickCell = tableView.cellForRow(at: indexPath) as! FlickCell
+//        if(cell.isSelected){
+//            cell.selectionStyle = .none
+//            
+//            // Use a red color when the user selects the cell
+//            let backgroundView = UIView()
+//            backgroundView.backgroundColor = UIColor.red
+//            cell.selectedBackgroundView = backgroundView
+//
+//        }else{
+//            cell.backgroundColor = UIColor.clear
+//        }
     }
 
     
@@ -173,11 +209,11 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         let cell = sender as! UITableViewCell
         let indexPath = tableView.indexPath(for: cell)
         let flick = flicks?[(indexPath?.row)!]
-        
+        // Get the new view controller
         let detailViewController = segue.destination as! DetailViewController
-        detailViewController.flick = flick
-        // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        detailViewController.flick = flick
+
     }
  
 
