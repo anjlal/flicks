@@ -66,21 +66,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
             
             if error != nil {
                 self.networkErrorLabel.text = "Network Error"
-                let image = UIImage(named: "network_error")
-                self.networkErrorImage.frame.size = CGSize(width: 12, height: 12)
-                self.networkErrorImage.image = image;
-                //self.view.addSubview(imageView);
-                //self.networkErrorImage.image = self.resizeImage(image: self.networkErrorImage.image!, newWidth: 12)
-                //let attachment: NSTextAttachment = NSTextAttachment()
-                //attachment.image = UIImage(named: "network_error")
-
-                //let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
-                //let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
-                //let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
-                //mutableAttachmentString.append(strLabelText)
-                
-                //self.networkErrorLabel.attributedText = mutableAttachmentString
-                
+                self.networkErrorImage.image = UIImage(named: "network_error")
                 self.networkErrorView.isHidden = false
 
             } else if let data = data,
@@ -119,14 +105,6 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
             if error != nil {
                 self.networkErrorLabel.text = "Network Error"
                 self.networkErrorImage.image = UIImage(named: "network_error")
-//                let attachment: NSTextAttachment = NSTextAttachment()
-//                attachment.image = UIImage(named: "network_error")
-//                let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
-//                let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
-//                let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
-//                mutableAttachmentString.append(strLabelText)
-//                
-//                self.networkErrorLabel.attributedText = mutableAttachmentString
                 self.networkErrorView.isHidden = false
             } else if let data = data,
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
