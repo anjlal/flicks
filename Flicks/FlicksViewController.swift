@@ -248,11 +248,13 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.reloadData()
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell: FlickCell = tableView.cellForRow(at: indexPath) as! FlickCell
-//        
-//    }
-
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell: FlickCell = tableView.cellForRow(at: indexPath) as! FlickCell
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 0.5)
+        cell.selectedBackgroundView = backgroundView
+        
+    }
     
     // MARK: - Navigation
 
