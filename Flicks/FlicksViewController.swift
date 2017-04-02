@@ -22,6 +22,10 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let navigationBar = navigationController?.navigationBar {
+            navigationBar.tintColor = UIColor.white
+            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
+        }
         
         networkErrorView.isHidden = true
         // Initialize a UIRefreshControl
@@ -54,6 +58,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
                 self.networkErrorLabel.text = "Network Error"
                 let attachment: NSTextAttachment = NSTextAttachment()
                 attachment.image = UIImage(named: "network_error")
+
                 let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
                 let strLabelText: NSAttributedString = NSAttributedString(string: self.networkErrorLabel.text!)
                 let mutableAttachmentString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attachmentString)
