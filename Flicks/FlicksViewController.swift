@@ -21,8 +21,8 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     var flicks: [NSDictionary]?
     
     var endpoint: String?
-    var titles: [String]?
-    var filteredData: [String]?
+    var searchActive : Bool = false
+    var filteredData: [NSDictionary]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,13 +80,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
                 self.networkErrorView.isHidden = true
                 self.flicks = dataDictionary["results"] as? [NSDictionary]
                 self.tableView.reloadData()
-                for flick in self.flicks! {
-                    if let title = flick["title"] as? String {
-                        if (self.titles?.append(title)) == nil {
-                            self.titles = [title]
-                        }                    }
-                }
-                self.filteredData = self.titles            }
+            }
         }
         task.resume()
         
@@ -153,26 +147,27 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-//        if let flicks = flicks {
-//            return flicks.count
-//        } else {
-//            return 0
-//        }
-      return (filteredData?.count)!
+        if(searchActive) {
+            return (filteredData?.count)!
+        }
+        if let flicks = flicks {
+            return flicks.count
+        } else {
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FlickCell", for: indexPath) as! FlickCell
-        let flick = flicks![indexPath.row]
-        let title = flick["title"] as! String
-        let overview = flick["overview"] as! String
-        //cell.titleLabel.text = title
-        cell.titleLabel.text = filteredData?[indexPath.row]
-        titles?.append(title)
+        let flick = searchActive ? filteredData?[indexPath.row] : flicks![indexPath.row]
+
+        let title = flick?["title"] as! String
+        let overview = flick?["overview"] as! String
+        cell.titleLabel.text = title
         cell.overviewLabel.text = overview
         
-        if let posterPath = flick["poster_path"] as? String {
+        if let posterPath = flick?["poster_path"] as? String {
             let baseURL = "https://image.tmdb.org/t/p/w342"
             //let imageURL = NSURL(string:baseURL + posterPath)
             let imageURL = NSURLRequest(url: NSURL(string: baseURL + posterPath) as! URL)
@@ -211,9 +206,17 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         // Use the filter method to iterate over all items in the data array
         // For each item, return true if the item should be included and false if the
         // item should NOT be included
-        filteredData = searchText.isEmpty ? titles : titles?.filter { (item: String) -> Bool in
-            // If dataItem matches the searchText, return true to include it
-            return item.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+  
+        if (searchText.isEmpty) {
+            filteredData = flicks
+        } else {
+            filteredData = flicks?.filter { String(describing: $0["title"]).range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+            }
+        }
+        if(filteredData?.count == 0){
+            searchActive = false
+        } else {
+            searchActive = true
         }
         tableView.reloadData()
     }
