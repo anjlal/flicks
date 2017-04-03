@@ -32,8 +32,9 @@ Here's a walkthrough of implemented user stories:
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
-
-Describe any challenges encountered while building the app.
+- I spent a good few hours on the search bar implementation, and once I started to keep track of the search state (i.e. active or non-active) I was able to hook up the correct data. 
+- Resizing images programmatically was also somewhat challenging. 
+- I'm still in the midst of implementing the segmented control. I have a collection view but am not able to populate it with the poster images just yet (however, it does work using the color label). Understanding the hierarchy of the collection view within a view controller that contains a table view, took me a while to wrap my head around.
 
 ## License
 
