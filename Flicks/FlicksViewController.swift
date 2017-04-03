@@ -241,7 +241,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         
         let cell = sender as! UITableViewCell
         let indexPath = tableView.indexPath(for: cell)
-        let flick = flicks?[(indexPath?.row)!]
+        let flick = searchActive ? filteredData?[(indexPath?.row)!] : flicks![(indexPath?.row)!]
         // Get the new view controller
         let detailViewController = segue.destination as! DetailViewController
         // Pass the selected object to the new view controller.
