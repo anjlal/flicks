@@ -11,7 +11,7 @@ import AFNetworking
 import MBProgressHUD
 import AVFoundation
 
-class FlicksViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class FlicksViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkErrorView: UIView!
@@ -20,6 +20,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var networkErrorImage: UIImageView!
     
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     var flicks: [NSDictionary]?
     
@@ -29,6 +30,9 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
         self.tableView.backgroundColor = UIColor.white
         searchBar.delegate = self
         
@@ -43,9 +47,9 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         refreshControl.addTarget(self, action: #selector(FlicksViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         // add refresh control to table view
         tableView.insertSubview(refreshControl, at: 0)
-        //tableView.insertSubview(refreshControl, at: 0)
+        collectionView.insertSubview(refreshControl, at: 0)
 
-        
+        collectionView.isHidden = false
         tableView.dataSource = self
         tableView.delegate = self
 
@@ -55,7 +59,6 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         let url = URL(string: "https://api.themoviedb.org/3/movie/\(endpoint!)?api_key=\(apiKey)")!
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
-        
         // Display HUD right before the request is made
         MBProgressHUD.showAdded(to: self.view, animated: true)
         
@@ -74,11 +77,10 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
                 self.networkErrorView.isHidden = true
                 self.flicks = dataDictionary["results"] as? [NSDictionary]
                 self.tableView.reloadData()
+                self.collectionView.reloadData()
             }
         }
         task.resume()
-        
-        
         
     }
 
@@ -116,6 +118,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
             
             // Reload the tableView now that there is new data
             self.tableView.reloadData()
+            self.collectionView.reloadData()
             
             // Tell the refreshControl to stop spinning
             refreshControl.endRefreshing()
@@ -156,9 +159,7 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         
         if let posterPath = flick?["poster_path"] as? String {
             let baseURL = "https://image.tmdb.org/t/p/w342"
-            //let imageURL = NSURL(string:baseURL + posterPath)
             let imageURL = NSURLRequest(url: NSURL(string: baseURL + posterPath) as! URL)
-            //cell.posterView.setImageWith(imageURL as! URL)
           
             cell.posterView.setImageWith(
                 imageURL as URLRequest,
@@ -234,18 +235,85 @@ class FlicksViewController: UIViewController, UITableViewDataSource, UITableView
         
     }
     
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if(searchActive) {
+            return (filteredData?.count)!
+        }
+        
+        if let flicks = flicks {
+            return flicks.count
+        } else {
+            return 0
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com.codepath.CollectionViewCell", for: indexPath) as! CollectionViewCell
+        print(indexPath.row)
+        let flick = searchActive ? filteredData?[indexPath.row] : flicks?[indexPath.row]
+        
+        if let posterPath = flick?["poster_path"] as? String {
+            let baseURL = "https://image.tmdb.org/t/p/w342"
+            let imageURL = NSURLRequest(url: NSURL(string: baseURL + posterPath) as! URL)
+    
+            
+            cell.posterImage.setImageWith(
+                imageURL as URLRequest,
+                placeholderImage: nil,
+                success: { (imageRequest, imageResponse, image) -> Void in
+                    
+                    // imageResponse will be nil if the image is cached
+                    if imageResponse != nil {
+                        print("Image was NOT cached, fade in image")
+                        cell.posterImage.alpha = 0.0
+                        cell.posterImage.image = image
+                        UIView.animate(withDuration: 0.3, animations: { () -> Void in
+                            cell.posterImage.alpha = 1.0
+                        })
+                    } else {
+                        print("Image was cached so just update the image")
+                        cell.posterImage.image = image
+                    }
+            },
+                failure: { (imageRequest, imageResponse, error) -> Void in
+                    // do something for the failure condition
+            })
+        }
+        
+        return cell
+    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        selectedRow = indexPath.row
+//        self.performSegue(withIdentifier: "collectionSegue", sender: self)
+//        
+//    }
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller
+        let detailViewController = segue.destination as! DetailViewController
+        
+        if (segue.identifier == "collectionSegue") {
+            let cell = sender as! UICollectionViewCell
+            let indexPath = collectionView.indexPath(for: cell)
+            let flick = flicks![(indexPath?.row)!]
+            detailViewController.flick = flick
+
+        } else {
         
         let cell = sender as! UITableViewCell
         let indexPath = tableView.indexPath(for: cell)
         let flick = searchActive ? filteredData?[(indexPath?.row)!] : flicks![(indexPath?.row)!]
-        // Get the new view controller
-        let detailViewController = segue.destination as! DetailViewController
         // Pass the selected object to the new view controller.
-        detailViewController.flick = flick
+            detailViewController.flick = flick
+
+        
+       }
 
     }
 }

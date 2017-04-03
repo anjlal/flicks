@@ -118,6 +118,37 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="XAJ-PO-X06">
+                                <rect key="frame" x="0.0" y="116" width="375" height="551"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QEF-RU-w5J">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="com.codepath.CollectionViewCell" id="T9t-gw-TuC" customClass="CollectionViewCell" customModule="Flicks" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="2go-3n-RKY">
+                                                    <rect key="frame" x="8" y="0.0" width="42" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <connections>
+                                            <outlet property="posterImage" destination="2go-3n-RKY" id="Z17-DC-NG3"/>
+                                            <segue destination="Uio-NJ-y0J" kind="push" identifier="collectionSegue" id="Ek5-rq-cud"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                             <view alpha="0.90000000000000002" contentMode="scaleToFill" misplaced="YES" id="PCH-pp-FJG">
                                 <rect key="frame" x="0.0" y="63" width="375" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -140,6 +171,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Flicks" id="z67-uA-d0I"/>
                     <connections>
+                        <outlet property="collectionView" destination="XAJ-PO-X06" id="vE2-hv-XRq"/>
                         <outlet property="networkErrorImage" destination="Upx-mH-oFA" id="w97-4L-sue"/>
                         <outlet property="networkErrorLabel" destination="sEY-MO-W0a" id="PU3-Tt-E4N"/>
                         <outlet property="networkErrorView" destination="PCH-pp-FJG" id="vyb-S9-CAr"/>
@@ -175,4 +207,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="Ek5-rq-cud"/>
+    </inferredMetricsTieBreakers>
 </document>
